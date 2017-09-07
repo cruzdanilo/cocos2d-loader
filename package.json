@@ -1,0 +1,33 @@
+{
+  "name": "cocos2d-loader",
+  "version": "1.0.0",
+  "description": "cocos2d loader module for webpack",
+  "main": "index.js",
+  "repository": "cruzdanilo/cruzdanilo.com",
+  "keywords": [
+    "cocos2d",
+    "webpack",
+    "loader"
+  ],
+  "author": {
+    "name": "danilo neves cruz",
+    "email": "cruzdanilo@gmail.com"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/cruzdanilo/cocos2d-loader/issues"
+  },
+  "homepage": "https://github.com/cruzdanilo/cocos2d-loader#readme",
+  "dependencies": {
+    "loader-utils": "^1.1.0",
+    "uglify-es": "^3.0.28"
+  },
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base"
+  }
+}
