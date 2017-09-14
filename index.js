@@ -1,6 +1,6 @@
 const path = require('path');
 const loaderUtils = require('loader-utils');
-const { SourceNode } = require('source-map');
+const { SourceListMap, fromStringWithSourceMap } = require('source-list-map');
 
 function getFileList(map, ...dependencies) {
   return dependencies.reduce((set, dep) => {
@@ -9,19 +9,22 @@ function getFileList(map, ...dependencies) {
   }, new Set());
 }
 
-module.exports = function main(source, sourceMap) {
-  const node = sourceMap ? SourceNode.fromStringWithSourceMap(source, sourceMap) :
-    new SourceNode(1, 1, loaderUtils.getRemainingRequest(this), source);
+module.exports = function main(source, map) {
+  const node = map ? fromStringWithSourceMap(source, map) : new SourceListMap();
+  if (!map) {
+    node.add(source, loaderUtils.getRemainingRequest(this), source);
+  }
   const options = loaderUtils.getOptions(this) || {};
   if (options.modules) {
     const config = JSON.parse(this.fs.readFileSync(path.join(this.context, 'moduleConfig.json')));
     getFileList(config.module, ...options.modules).forEach((f) => {
-      const abs = path.join(this.context, f);
-      this.addDependency(abs);
-      node.add(new SourceNode(1, 1, f, this.fs.readFileSync(abs).toString()));
+      const fpath = path.join(this.context, f);
+      this.addDependency(fpath);
+      const fcontent = this.fs.readFileSync(fpath).toString();
+      node.add(fcontent, fpath, fcontent);
     });
   }
   node.add('\nmodule.exports=cc;');
   const result = node.toStringWithSourceMap();
-  this.callback(null, result.code, result.map.toJSON());
+  this.callback(null, result.source, result.map);
 };
