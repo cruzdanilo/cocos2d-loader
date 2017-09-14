@@ -1,6 +1,6 @@
 {
   "name": "cocos2d-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "cocos2d loader module for webpack",
   "main": "index.js",
   "repository": "cruzdanilo/cruzdanilo.com",
