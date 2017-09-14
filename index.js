@@ -1,6 +1,6 @@
 const path = require('path');
 const loaderUtils = require('loader-utils');
-const { SourceListMap, fromStringWithSourceMap } = require('source-list-map');
+const { RawSource, OriginalSource, ConcatSource } = require('webpack-sources');
 
 function getFileList(map, ...dependencies) {
   return dependencies.reduce((set, dep) => {
@@ -9,22 +9,19 @@ function getFileList(map, ...dependencies) {
   }, new Set());
 }
 
-module.exports = function main(source, map) {
-  const node = map ? fromStringWithSourceMap(source, map) : new SourceListMap();
-  if (!map) {
-    node.add(source, loaderUtils.getRemainingRequest(this), source);
-  }
+module.exports = function main(source) {
+  const sourcePath = loaderUtils.getRemainingRequest(this);
+  const concat = new ConcatSource(new OriginalSource(source, sourcePath));
   const options = loaderUtils.getOptions(this) || {};
   if (options.modules) {
     const config = JSON.parse(this.fs.readFileSync(path.join(this.context, 'moduleConfig.json')));
     getFileList(config.module, ...options.modules).forEach((f) => {
       const fpath = path.join(this.context, f);
       this.addDependency(fpath);
-      const fcontent = this.fs.readFileSync(fpath).toString();
-      node.add(fcontent, fpath, fcontent);
+      concat.add(new OriginalSource(this.fs.readFileSync(fpath).toString(), fpath));
     });
   }
-  node.add('\nmodule.exports=cc;');
-  const result = node.toStringWithSourceMap();
+  concat.add(new RawSource('\nmodule.exports=cc;'));
+  const result = concat.sourceAndMap();
   this.callback(null, result.source, result.map);
 };
