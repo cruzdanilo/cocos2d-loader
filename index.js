@@ -1,30 +1,27 @@
 const path = require('path');
 const loaderUtils = require('loader-utils');
-const UglifyJS = require('uglify-es');
+const { SourceNode } = require('source-map');
 
 function getFileList(map, ...dependencies) {
-  return dependencies.reduce((list, dep) => {
-    if (path.extname(dep)) {
-      if (!list.includes(dep)) list.push(dep);
-    } else {
-      list.push(...getFileList(map, ...map[dep]));
-    }
-    return list;
-  }, []);
+  return dependencies.reduce((set, dep) => {
+    if (path.extname(dep)) return set.add(dep);
+    return new Set([...set, ...getFileList(map, ...map[dep])]);
+  }, new Set());
 }
 
-module.exports = function main(source) {
-  const sources = { [loaderUtils.getRemainingRequest(this)]: source };
+module.exports = function main(source, sourceMap) {
+  const node = sourceMap ? SourceNode.fromStringWithSourceMap(source, sourceMap) :
+    new SourceNode(1, 1, loaderUtils.getRemainingRequest(this), source);
   const options = loaderUtils.getOptions(this) || {};
   if (options.modules) {
     const config = JSON.parse(this.fs.readFileSync(path.join(this.context, 'moduleConfig.json')));
-    Object.assign(sources, ...getFileList(config.module, ...options.modules).map((file) => {
-      const abs = path.join(this.context, file);
+    getFileList(config.module, ...options.modules).forEach((f) => {
+      const abs = path.join(this.context, f);
       this.addDependency(abs);
-      return { [abs]: this.fs.readFileSync(abs).toString() };
-    }));
+      node.add(new SourceNode(1, 1, f, this.fs.readFileSync(abs).toString()));
+    });
   }
-  const result = UglifyJS.minify(sources, { compress: { dead_code: true } });
-  if (result.error) this.emitError(result.error);
-  return `${result.code};module.exports=cc`;
+  node.add('\nmodule.exports=cc;');
+  const result = node.toStringWithSourceMap();
+  this.callback(null, result.code, result.map.toJSON());
 };

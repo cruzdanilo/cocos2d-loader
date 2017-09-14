@@ -20,7 +20,7 @@
   "homepage": "https://github.com/cruzdanilo/cocos2d-loader#readme",
   "dependencies": {
     "loader-utils": "^1.1.0",
-    "uglify-es": "^3.0.28"
+    "source-map": "^0.5.7"
   },
   "devDependencies": {
     "eslint": "^4.6.1",
