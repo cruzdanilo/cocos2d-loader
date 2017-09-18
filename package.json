@@ -1,6 +1,6 @@
 {
   "name": "cocos2d-loader",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "cocos2d loader module for webpack",
   "main": "index.js",
   "repository": "cruzdanilo/cruzdanilo.com",
@@ -23,7 +23,7 @@
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
-    "eslint": "^4.6.1",
+    "eslint": "^4.7.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0"
   },

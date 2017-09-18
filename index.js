@@ -21,7 +21,8 @@ module.exports = function main(source) {
       concat.add(new OriginalSource(this.fs.readFileSync(fpath).toString(), fpath));
     });
   }
-  concat.add(new RawSource('\nmodule.exports=cc;'));
+  const exports = options.exports ? `{${options.exports.join()}}` : 'cc';
+  concat.add(new RawSource(`\nmodule.exports=${exports};`));
   const result = concat.sourceAndMap();
   this.callback(null, result.source, result.map);
 };
