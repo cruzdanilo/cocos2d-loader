@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "cocos2d loader module for webpack",
   "main": "index.js",
-  "repository": "cruzdanilo/cruzdanilo.com",
+  "repository": "cruzdanilo/cocos2d-loader",
   "keywords": [
     "cocos2d",
     "webpack",
