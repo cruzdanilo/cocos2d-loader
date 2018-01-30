@@ -9,9 +9,9 @@ function getFileList(map, ...dependencies) {
   }, new Set());
 }
 
-module.exports = function loader(source) {
+module.exports = function loader(content) {
   const sourcePath = loaderUtils.getRemainingRequest(this);
-  const concat = new ConcatSource(new OriginalSource(source, sourcePath));
+  const concat = new ConcatSource(new OriginalSource(content, sourcePath));
   const options = loaderUtils.getOptions(this) || {};
   if (options.modules) {
     const config = JSON.parse(this.fs.readFileSync(path.join(this.context, 'moduleConfig.json')));
