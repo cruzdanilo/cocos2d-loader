@@ -9,7 +9,7 @@ function getFileList(map, ...dependencies) {
   }, new Set());
 }
 
-module.exports = function main(source) {
+module.exports = function loader(source) {
   const sourcePath = loaderUtils.getRemainingRequest(this);
   const concat = new ConcatSource(new OriginalSource(source, sourcePath));
   const options = loaderUtils.getOptions(this) || {};
