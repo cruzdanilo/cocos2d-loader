@@ -21,8 +21,7 @@ module.exports = function loader(content) {
       concat.add(new OriginalSource(this.fs.readFileSync(fpath).toString(), fpath));
     });
   }
-  const exports = options.exports ? `{${options.exports.join()}}` : 'cc';
-  concat.add(new RawSource(`\nmodule.exports=${exports};`));
+  concat.add(new RawSource(`export ${options.exports ? `{${options.exports.join()}}` : 'default cc'};\n`));
   const result = concat.sourceAndMap();
   this.callback(null, result.source, result.map);
 };

@@ -20,12 +20,12 @@
   "homepage": "https://github.com/cruzdanilo/cocos2d-loader#readme",
   "dependencies": {
     "loader-utils": "^1.1.0",
-    "webpack-sources": "^1.0.1"
+    "webpack-sources": "^1.2.0"
   },
   "devDependencies": {
-    "eslint": "^4.7.0",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-plugin-import": "^2.7.0"
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   },
   "eslintConfig": {
     "extends": "airbnb-base"
